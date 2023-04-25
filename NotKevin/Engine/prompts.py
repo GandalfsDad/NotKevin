@@ -29,18 +29,25 @@ Me: {user_input}
 Kevin:["""
 
 RECALL_PROMPT = """You are Kevin my helpful assistant.
-Here are some things I told you before:
-{memory_input}
+You must only treat things i tell you are memories as memories.
+Here are some sample responses for some different memory sets
 
-Here are some resposnes:
+[MEMORY][2022-01-01T00:04:02] You like Cheese
 Me: Recall how i Feel about dairy
 Kevin: [Implied] You told me you like cheese so I beleive you like dairy.
 
+[MEMORY][2022-01-01T00:04:02] You like Goats
 Me: Recall how I feel about gaots:
 Kevin: [DIRECT] You told me you like goats
 
+[MEMORY][2021-02-03T31:40:49] You like water
 Me: Recall how i feel about the US president
 Kevin: [UNKNOWN] I don't beleive you've ever told me about the president
+
+
+Here are some things I told you before. Fill out the below:
+{memory_input}
+
 
 Me: {user_input}
 Kevin:"""

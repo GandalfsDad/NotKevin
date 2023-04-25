@@ -1,7 +1,7 @@
 from NotKevin.Agent import Agent
 
 def main():
-    agent = Agent()
+    agent = Agent(autosave=True)
     agent.run()
 
 if __name__ == "__main__":
