@@ -1,1 +1,3 @@
 .envrc
+*.ipynb
+*__pycache__/
