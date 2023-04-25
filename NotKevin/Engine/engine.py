@@ -28,15 +28,12 @@ class Engine:
 
     def _generate(self, query, save = False):
         ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        print(f"Received query: {query}")
 
         if save:
             user_input = f"[USERINPUT][{ts}] {query}"
             self._store(user_input, ts)
 
         responseType = self._get_response_type(query)
-
-        print(f"Response type is: {responseType}")
 
         if responseType == ResponseType.MEMORY:
             return self._remember(query, ts, save=save)
@@ -86,7 +83,6 @@ class Engine:
     
     def _get_response_type(self, query):
         responseType = get_completion(QUERY_TYPE_PROMPT.format(user_input=query),stop = [']','\n', ' ']).strip()
-        print(f"Response type response is: {responseType}")
 
         if responseType in ['[MEMORY]', 'MEMORY']:
             return ResponseType.MEMORY
