@@ -6,6 +6,8 @@ from datetime import datetime
 
 import numpy as np
 
+DEFAULT_MEMORY_DEPTH = 25
+
 class Engine:
 
     def __init__(self, memory):
@@ -39,9 +41,9 @@ class Engine:
         if responseType == ResponseType.MEMORY:
             return self._remember(query, ts, save=save)
         elif responseType == ResponseType.RECALL:
-            return self._recall(query)
+            return self._recall(query, ts, save=save)
         elif responseType == ResponseType.RESPONSE:
-            return self._respond(query)
+            return self._respond(query, ts, save=save)
         else:
             raise ValueError("Invalid Response Type")
 
@@ -56,26 +58,34 @@ class Engine:
         embed = get_embeddings(query)
         self.__memory.store(query, embed)
     
-    def _recall(self, query, memory_depth = 50):
+    def _recall(self, query, ts, save = False, memory_depth = DEFAULT_MEMORY_DEPTH):
         content, embs = self.__memory.get_memories()
 
         query_emb = get_embeddings(query)[0]
-
         similarities = np.dot(embs, query_emb)
 
         top = np.argsort(similarities)[-memory_depth:]
-
         mem_prompt = '- '+'\n- '.join(content[top,0])
 
+        recall =  get_completion(RECALL_PROMPT.format(user_input=query, memory_input=mem_prompt))
+        recall = f"[RECALL][{ts}] {recall}"
 
+        recall_emb = get_embeddings(recall)
+        self.__memory.store(recall, recall_emb)
 
-        return get_completion(RECALL_PROMPT.format(user_input=query, memory_input=mem_prompt))
+        return recall
     
-    def _respond(self, query):
-        return get_completion(RESPONSE_PROMPT.format(user_input=query))
+    def _respond(self, query, ts, save = False):
+        response =  get_completion(RESPONSE_PROMPT.format(user_input=query))
+
+        response = f"[RESPONSE][{ts}] {response}"
+        response_emb = get_embeddings(response)
+        self.__memory.store(response, response_emb)
+
+        return response
     
     def _get_response_type(self, query):
-        responseType = get_completion(QUERY_TYPE_PROMPT.format(user_input=query),stop = [']','/n', ' ']).strip()
+        responseType = get_completion(QUERY_TYPE_PROMPT.format(user_input=query),stop = [']','\n', ' ']).strip()
         print(f"Response type response is: {responseType}")
 
         if responseType in ['[MEMORY]', 'MEMORY']:
