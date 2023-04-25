@@ -22,12 +22,13 @@ def get_embeddings(docs, model = DEFAULT_EMBEDDING_MODEL, chunk = DEFAULT_EMBEDD
 
     return embeddings
 
-def get_completion(input, model = DEFAULT_COMPLETION_MODEL, max_tokens = DEFAULT_MAX_TOKENS, temperature = DEFAULT_TEMPERATURE):
+def get_completion(input, model = DEFAULT_COMPLETION_MODEL, max_tokens = DEFAULT_MAX_TOKENS, temperature = DEFAULT_TEMPERATURE,stop = None):
     response = openai.Completion.create(
         model=model,
         prompt=input,
         max_tokens=max_tokens,
         temperature=temperature,
+        stop=stop
         )
     
     return response['choices'][0]['text']

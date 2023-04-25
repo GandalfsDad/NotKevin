@@ -58,7 +58,19 @@ class LocalMemory(Memory):
         if not os.path.exists(".memory/content.npy"):
             content = np.array([]).reshape(-1,1)
             np.save(".memory/content", content)
+
+    def get_memories(self):
+        idx = [x[0][:3]=='[ME' for x in self.Content]
+        return self.Content[idx], self.Embeddings[idx]
     
     @property
     def Type(self):
         return self.__type
+    
+    @property
+    def Embeddings(self):
+        return self.__embeddings
+
+    @property
+    def Content(self):
+        return self.__text
