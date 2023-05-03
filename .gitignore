@@ -2,3 +2,5 @@
 *.ipynb
 *__pycache__/
 .memory/
+dist/*
+NotKevin.egg-info
