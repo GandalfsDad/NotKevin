@@ -31,6 +31,10 @@ class Agent:
         print(Fore.GREEN + f"[{self.name}]" + Fore.CYAN + "Hello I am Kevin, what can I do for you today?")
         while True:
             query = input(Fore.RED+"[YOU] " + Fore.WHITE)
+
+            if query.lower().strip() in  ("exit","exit()","end","die","quit","q"):
+                break   
+
             response = self.__engine._generate(query, save = self.__autosave)
             print(self.format_response(response))
 
