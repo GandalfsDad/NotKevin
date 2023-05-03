@@ -12,6 +12,9 @@ class Memory:
     
     def store(self, data):
         raise NotImplementedError()
+    
+    def clear(self):
+        raise NotImplementedError()
 
     @property
     def Type(self):

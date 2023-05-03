@@ -24,6 +24,9 @@ class Agent:
         else:
             raise NotImplementedError()
         
+    def clear_memory(self, save = False):
+        self.__memory.clear(save=save)
+        
     def run(self):
         print(Fore.GREEN + f"[{self.name}]" + Fore.CYAN + "Hello I am Kevin, what can I do for you today?")
         while True:

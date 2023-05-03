@@ -63,6 +63,12 @@ class LocalMemory(Memory):
         idx = [x[0][:3]=='[ME' for x in self.Content]
         return self.Content[idx], self.Embeddings[idx]
     
+    def clear(self, save = False):
+        self.__text = np.array([]).reshape(-1,1)
+        self.__embeddings = np.array([]).reshape(-1,1536)
+        if save:
+            self._save()
+    
     @property
     def Type(self):
         return self.__type
