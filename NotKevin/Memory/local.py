@@ -2,6 +2,8 @@ from .memory import Memory
 import os
 import numpy as np
 
+HOME = os.path.expanduser('~')
+
 class LocalMemory(Memory):
     def __init__(self):
         super().__init__()
@@ -37,27 +39,27 @@ class LocalMemory(Memory):
         self._save()
     
     def _load(self):
-        self.__embeddings = np.load(".memory/vector.npy").reshape(-1,1536)
-        self.__text = np.load(".memory/content.npy").reshape(-1,1)
+        self.__embeddings = np.load(f"{HOME}/.memory/vector.npy").reshape(-1,1536)
+        self.__text = np.load(f"{HOME}/.memory/content.npy").reshape(-1,1)
     
     def _save(self):
-        np.save(".memory/vector", self.__embeddings)
-        np.save(".memory/content", self.__text)
+        np.save(f"{HOME}/.memory/vector", self.__embeddings)
+        np.save(f"{HOME}/.memory/content", self.__text)
     
     def _setup(self):
         #Check if .memory exists
-        if not os.path.exists(".memory"):
-            os.mkdir(".memory")
+        if not os.path.exists(f"{HOME}/.memory"):
+            os.mkdir(f"{HOME}/.memory")
         
         #check if .memory/vector.np exists
-        if not os.path.exists(".memory/vector.npy"):
+        if not os.path.exists(f"{HOME}/.memory/vector.npy"):
             vector = np.array([]).reshape(-1,1536)
-            np.save(".memory/vector", vector)
+            np.save(f"{HOME}/.memory/vector", vector)
         
         #check if .memory/content.np exists
-        if not os.path.exists(".memory/content.npy"):
+        if not os.path.exists(f"{HOME}/.memory/content.npy"):
             content = np.array([]).reshape(-1,1)
-            np.save(".memory/content", content)
+            np.save(f"{HOME}/.memory/content", content)
 
     def get_memories(self):
         idx = [x[0][:3]=='[ME' for x in self.Content]

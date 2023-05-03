@@ -10,7 +10,6 @@ DEFAULT_EMBEDDING_CHUNK = 1000
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 def get_embeddings(docs, model = DEFAULT_EMBEDDING_MODEL, chunk = DEFAULT_EMBEDDING_CHUNK):
-
     embeddings = []
     if len(docs) > chunk:
         for i in range(0, len(docs), chunk):
@@ -23,6 +22,7 @@ def get_embeddings(docs, model = DEFAULT_EMBEDDING_MODEL, chunk = DEFAULT_EMBEDD
     return embeddings
 
 def get_completion(input, model = DEFAULT_COMPLETION_MODEL, max_tokens = DEFAULT_MAX_TOKENS, temperature = DEFAULT_TEMPERATURE,stop = None):
+  
     response = openai.Completion.create(
         model=model,
         prompt=input,
