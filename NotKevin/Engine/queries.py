@@ -22,7 +22,7 @@ def get_embeddings(docs, model = DEFAULT_EMBEDDING_MODEL, chunk = DEFAULT_EMBEDD
             embeddings = [doc['embedding'] for doc in response['data']]
 
         return embeddings
-    except openai.error.RateLimmitError as e:
+    except openai.error.RateLimitError as e:
         time.sleep(1)
         return get_embeddings(docs, model, chunk)
 
@@ -35,7 +35,7 @@ def get_completion(input, model = DEFAULT_COMPLETION_MODEL, max_tokens = DEFAULT
             temperature=temperature,
             stop=stop
             )
-    except openai.error.RateLimmitError as e:
+    except openai.error.RateLimitError as e:
         time.sleep(1)
         return get_completion(input, model, max_tokens, temperature, stop)
     
