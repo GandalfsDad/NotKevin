@@ -14,9 +14,12 @@ python -m build
 ### install
 ```bash
 cd dist
+conda create -n notkevin python=3.11
 pip install notkevin-0.0.0-py3-none-any.whl
 ```
 
-### Add to profile
-Add `alias NK='conda activate NotKevin && /Users/rhian/code/NotKevin/main.py'` to your profile
-
+### Access
+```base
+conda activate notkevin
+NK
+```
