@@ -14,7 +14,7 @@ def cli():
         clear = True
 
     autosave = True
-    if args.NoSave:
+    if args.nosave:
         autosave = False
 
     agent = Agent(autosave=autosave)
