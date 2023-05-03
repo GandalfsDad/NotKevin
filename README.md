@@ -23,3 +23,6 @@ pip install notkevin-0.0.0-py3-none-any.whl
 conda activate notkevin
 NK
 ```
+
+### API KEY
+The use of this requires an API KEY. This needs to be stored in the environment variable `OPENAI_API_KEY`.
