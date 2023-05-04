@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="NotKevin",
-    version="0.0.0",
+    version="0.0.1",
     author="GandalfsDad",
     description="This is my attempt at combing storage with a gpt",
     long_description=long_description,
