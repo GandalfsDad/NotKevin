@@ -1,19 +1,21 @@
-from .queries import get_completion, get_embeddings
+from .queries import get_chat_completion, get_embeddings
 from collections.abc import Iterable
-from .prompts import REMEMBER_PROMPT, QUERY_TYPE_PROMPT, RECALL_PROMPT, RESPONSE_PROMPT
-from .enum import ResponseType
-from datetime import datetime
+from .prompts import USER_PROMPT, SYSTEM_PROMPT
+
+import json
 
 import numpy as np
 
 DEFAULT_MEMORY_DEPTH = 25
+DEFAULT_RECENT_DEPTH = 10
 
 class Engine:
 
     def __init__(self, memory):
         self.__memory = memory
+        self._recentMessages = []
 
-    def get_embeddings(self, query, autoSave = False):
+    def get_embeddings(self, query, save = True):
 
         if query is not Iterable:
             query = [query]
@@ -23,39 +25,33 @@ class Engine:
         for q, e in zip(query, embeddings):
             self.__memory.store(q, e)
 
-        if autoSave:
+        if save:
             self.__memory.save()
 
-    def _generate(self, query, save = False):
-        ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        if save:
-            user_input = f"[USERINPUT][{ts}] {query}"
-            self._store(user_input, ts)
-
-        responseType = self._get_response_type(query)
-
-        if responseType == ResponseType.MEMORY:
-            return self._remember(query, ts, save=save)
-        elif responseType == ResponseType.RECALL:
-            return self._recall(query, ts, save=save)
-        elif responseType == ResponseType.RESPONSE:
-            return self._respond(query, ts, save=save)
-        else:
-            raise ValueError("Invalid Response Type")
-
-    def _remember(self, query, ts, save = False):
-        mem = get_completion(REMEMBER_PROMPT.format(user_input=query, timestamp=ts)).strip()
-        if save:
-            self._store(mem, ts)
-
-        return mem
+    def generate(self, query, save = True):
+        query = f"[ME] {query}"
     
-    def _store(self, query, ts):
+        recent = self._genRecent()
+        context = self._genContext(query)
+
+        if save:
+            self._store(query)
+
+        response = self._genResponse(query, recent, context, save = save)
+
+        self._recentMessages.append(query)
+        self._recentMessages.append(response)
+
+        return response
+ 
+    def _store(self, query):
         embed = get_embeddings(query)
         self.__memory.store(query, embed)
+
+    def _genRecent(self):
+        return '\n'.join(self._recentMessages[-DEFAULT_RECENT_DEPTH:])
     
-    def _recall(self, query, ts, save = False, memory_depth = DEFAULT_MEMORY_DEPTH):
+    def _genContext(self, query, save = True, memory_depth = DEFAULT_MEMORY_DEPTH):
         content, embs = self.__memory.get_memories()
 
         query_emb = get_embeddings(query)[0]
@@ -64,31 +60,25 @@ class Engine:
         top = np.argsort(similarities)[-memory_depth:]
         mem_prompt = '- '+'\n- '.join(content[top,0])
 
-        recall =  get_completion(RECALL_PROMPT.format(user_input=query, memory_input=mem_prompt))
-        recall = f"[RECALL][{ts}] {recall}"
-
-        recall_emb = get_embeddings(recall)
-        self.__memory.store(recall, recall_emb)
-
-        return recall
+        return mem_prompt
     
-    def _respond(self, query, ts, save = False):
-        response =  get_completion(RESPONSE_PROMPT.format(user_input=query))
+    def _genResponse(self, query, recentMessages,contextMessages,save = True):
+        
+        prompt = USER_PROMPT.format(recent_messages = recentMessages, context_messages = contextMessages, query = query)
 
-        response = f"[RESPONSE][{ts}] {response}"
-        response_emb = get_embeddings(response)
-        self.__memory.store(response, response_emb)
+        response = get_chat_completion(prompt, SYSTEM_PROMPT)
 
-        return response
-    
-    def _get_response_type(self, query):
-        responseType = get_completion(QUERY_TYPE_PROMPT.format(user_input=query),stop = [']','\n', ' ']).strip()
+        response = json.loads(response)
+        if "[INSIGHT]" in response:
+            if save and (len(response['[INSIGHT]']) > 0):
+                self._store(f"[INSIGHT] {response['[INSIGHT]']}")
 
-        if responseType in ['[MEMORY]', 'MEMORY']:
-            return ResponseType.MEMORY
-        elif responseType in ['[RESPONSE]', 'RESPONSE']:
-            return ResponseType.RESPONSE
-        elif responseType in ['[RECALL]', 'RECALL']:
-            return ResponseType.RECALL
+        if "[RESPONSE]" in response:
+            _response = f"[KEVIN] {response['[RESPONSE]']}"
+            if save:
+                self._store(_response)
+            return _response
         else:
-            raise ValueError("Invalid Response Type")
+            raise ValueError("Response not found")
+
+
