@@ -4,6 +4,7 @@ import time
 
 DEFAULT_EMBEDDING_MODEL = 'text-embedding-ada-002'
 DEFAULT_COMPLETION_MODEL = 'text-davinci-003'
+DEFAULT_CHAT_COMPLETION_MODEL = 'gpt-3.5-turbo'
 DEFAULT_TEMPERATURE = 0
 DEFAULT_MAX_TOKENS = 1024
 DEFAULT_EMBEDDING_CHUNK = 1000
@@ -40,3 +41,20 @@ def get_completion(input, model = DEFAULT_COMPLETION_MODEL, max_tokens = DEFAULT
         return get_completion(input, model, max_tokens, temperature, stop)
     
     return response['choices'][0]['text']
+
+def get_chat_completion(input, system,model = DEFAULT_CHAT_COMPLETION_MODEL, max_tokens = DEFAULT_MAX_TOKENS, temperature = DEFAULT_TEMPERATURE,stop = None):
+    try:
+
+        response = openai.ChatCompletion.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": input},
+                ],
+            max_tokens=max_tokens
+        )
+    except openai.error.RateLimitError as e:
+        time.sleep(1)
+        return get_completion(input, system, model, max_tokens, temperature, stop)
+    
+    return response['choices'][0]['message']['content']

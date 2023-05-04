@@ -62,8 +62,9 @@ class LocalMemory(Memory):
             np.save(f"{HOME}/.memory/content", content)
 
     def get_memories(self):
-        idx = [x[0][:3]=='[ME' for x in self.Content]
+        idx = [x[0][:3]!='[IN' for x in self.Content]
         return self.Content[idx], self.Embeddings[idx]
+        return self.Content, self.Embeddings
     
     def clear(self, save = False):
         self.__text = np.array([]).reshape(-1,1)
