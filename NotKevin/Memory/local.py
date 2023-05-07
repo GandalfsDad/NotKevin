@@ -12,7 +12,7 @@ class LocalMemory(Memory):
         self.__sub_directory = sub_directory
         self.__text = None
         self.__embeddings = None
-        self.__personality = None
+        self.__personality = ""
 
         self._setup()
         self._load()
