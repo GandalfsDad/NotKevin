@@ -6,7 +6,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--clear", dest = "clear",help="Clears the memory before running", action="store_true")
 parser.add_argument("-n", "--name", dest = "name", help="Name of the agent", default="NotKevin")
-parser.add_argument("-h", "--headless", dest = "nosave", help="Does not save the memory", action="store_true")
+parser.add_argument("-r", "--rubberduck", dest = "nosave", help="Does not save the memory", action="store_true")
 
 def cli():
     args = parser.parse_args()

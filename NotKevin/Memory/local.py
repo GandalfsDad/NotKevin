@@ -40,19 +40,19 @@ class LocalMemory(Memory):
         self._save()
     
     def _load(self):
-        self.__embeddings = np.load(f"{HOME}/.memory/vector.npy").reshape(-1,1536)
-        self.__text = np.load(f"{HOME}/.memory/content.npy").reshape(-1,1)
+        self.__embeddings = np.load(f"{HOME}/.memory/{self.__sub_directory}/vector.npy").reshape(-1,1536)
+        self.__text = np.load(f"{HOME}/.memory/{self.__sub_directory}/content.npy").reshape(-1,1)
     
     def _save(self):
-        np.save(f"{HOME}/.memory/vector", self.__embeddings)
-        np.save(f"{HOME}/.memory/content", self.__text)
+        np.save(f"{HOME}/.memory/{self.__sub_directory}/vector", self.__embeddings)
+        np.save(f"{HOME}/.memory/{self.__sub_directory}/content", self.__text)
     
     def _setup(self):
         #Check if .memory exists
         if not os.path.exists(f"{HOME}/.memory"):
             os.mkdir(f"{HOME}/.memory")
 
-        if not os.parh.exists(f"{HOME}/.memory/{self.__sub_directory}"):
+        if not os.path.exists(f"{HOME}/.memory/{self.__sub_directory}"):
             os.mkdir(f"{HOME}/.memory/{self.__sub_directory}")
         
         #check if .memory/vector.np exists

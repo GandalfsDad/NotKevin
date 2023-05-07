@@ -8,10 +8,11 @@ DEFULT_AUTOSAVE = True
 class Agent:
 
     def __init__(self, name = "NotKevin", memory = DEFAULT_MEMORY, autosave = DEFULT_AUTOSAVE):
+        self.__name = name
         self.__memory = self._initiate_memory(memory)
         self.__engine = Engine(self.__memory)
         self.__autosave = autosave
-        self.name = name
+        
 
         init(autoreset=True)
 
@@ -20,7 +21,7 @@ class Agent:
             return memory
 
         if memory == 'Local':
-            return LocalMemory(sub_directory=self.name)
+            return LocalMemory(sub_directory=self.__name)
         else:
             raise NotImplementedError()
         
@@ -28,7 +29,7 @@ class Agent:
         self.__memory.clear(save=save)
         
     def run(self):
-        print(self.format_response("Hello I am Kevin, what can I do for you today?"))
+        print(self.format_response(f"Hello I am {self.__name}, what can I do for you today?"))
         while True:
             query = input(Fore.RED+"[YOU] " + Fore.WHITE)
 
@@ -41,6 +42,6 @@ class Agent:
     def format_response(self, response):
        loc = response.find("]")+1
        if loc <= 0:
-            return(Fore.GREEN+f"[{self.name}] "+Fore.CYAN+response)
+            return(Fore.GREEN+f"[{self.__name}] "+Fore.CYAN+response)
        else:
-            return(Fore.GREEN+f"[{self.name}] "+Fore.CYAN+response[loc:])
+            return(Fore.GREEN+f"[{self.__name}] "+Fore.CYAN+response[loc:])
