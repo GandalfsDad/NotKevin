@@ -12,6 +12,7 @@ class LocalMemory(Memory):
         self.__sub_directory = sub_directory
         self.__text = None
         self.__embeddings = None
+        self.__personality = None
 
         self._setup()
         self._load()
@@ -42,10 +43,16 @@ class LocalMemory(Memory):
     def _load(self):
         self.__embeddings = np.load(f"{HOME}/.memory/{self.__sub_directory}/vector.npy").reshape(-1,1536)
         self.__text = np.load(f"{HOME}/.memory/{self.__sub_directory}/content.npy").reshape(-1,1)
+        self.__manerisms = open(f"{HOME}/.memory/{self.__sub_directory}/manerisms.txt", "r").read()
     
     def _save(self):
         np.save(f"{HOME}/.memory/{self.__sub_directory}/vector", self.__embeddings)
         np.save(f"{HOME}/.memory/{self.__sub_directory}/content", self.__text)
+    
+    def save_personality(self, personality):
+        self.__personality = personality
+        with open(f"{HOME}/.memory/{self.__sub_directory}/personality.txt", "w") as f:
+            f.write(personality)
     
     def _setup(self):
         #Check if .memory exists
@@ -65,16 +72,22 @@ class LocalMemory(Memory):
             content = np.array([]).reshape(-1,1)
             np.save(f"{HOME}/.memory/{self.__sub_directory}/content", content)
 
+        #check if .memory/personality.txt exists
+        if not os.path.exists(f"{HOME}/.memory/{self.__sub_directory}/manerisms.txt"):
+            with open(f"{HOME}/.memory/{self.__sub_directory}/manerisms.txt", "w") as f:
+                f.write("")
+
     def get_memories(self):
         idx = [x[0][:3]!='[IN' for x in self.Content]
         return self.Content[idx], self.Embeddings[idx]
-        return self.Content, self.Embeddings
     
     def clear(self, save = False):
         self.__text = np.array([]).reshape(-1,1)
         self.__embeddings = np.array([]).reshape(-1,1536)
+        self.__personality = ""
         if save:
             self._save()
+            self.save_personality("")
     
     @property
     def Type(self):
@@ -87,3 +100,15 @@ class LocalMemory(Memory):
     @property
     def Content(self):
         return self.__text
+    
+    @property
+    def HasPersonality(self):
+        return len(self.__personality) > 1
+    
+    @property
+    def Personality(self):
+        return self.__personality
+    
+    @property
+    def Name(self):
+        return self.__sub_directory

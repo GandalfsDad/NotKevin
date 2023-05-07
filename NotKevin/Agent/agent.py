@@ -21,7 +21,13 @@ class Agent:
             return memory
 
         if memory == 'Local':
-            return LocalMemory(sub_directory=self.__name)
+            lm = LocalMemory(sub_directory=self.__name)
+
+            if  not lm.HasPersonality:
+                query = input(Fore.RED+"Before we kick off. Please provide a summary of my personality \n" + Fore.WHITE)
+                lm.save_personality(query)
+
+            return lm
         else:
             raise NotImplementedError()
         
