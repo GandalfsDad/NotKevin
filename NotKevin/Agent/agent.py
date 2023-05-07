@@ -7,7 +7,7 @@ DEFULT_AUTOSAVE = True
 
 class Agent:
 
-    def __init__(self, name = "Not Kevin", memory = DEFAULT_MEMORY, autosave = DEFULT_AUTOSAVE):
+    def __init__(self, name = "NotKevin", memory = DEFAULT_MEMORY, autosave = DEFULT_AUTOSAVE):
         self.__memory = self._initiate_memory(memory)
         self.__engine = Engine(self.__memory)
         self.__autosave = autosave
@@ -20,7 +20,7 @@ class Agent:
             return memory
 
         if memory == 'Local':
-            return LocalMemory()
+            return LocalMemory(sub_directory=self.name)
         else:
             raise NotImplementedError()
         
