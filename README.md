@@ -1,6 +1,6 @@
 # NotKevin
 
-This is my attempt at combing storage with a gpt.
+This is my attempt at creating some fun interactive chatbots with memory based on gpt.
 The assistant is meant to be a personal assistant that can be used to store information and retrieve it later.
 Its a toy example.
 
@@ -21,7 +21,7 @@ pip install notkevin-0.0.0-py3-none-any.whl
 ### Access
 ```base
 conda activate notkevin
-NK
+NK -n <name> 
 ```
 
 ### API KEY
@@ -34,6 +34,9 @@ The standard `NK -h` will show the help menu.
 `-c` or `--clear`  
 Clears  the memory
 
-`-n` or `--nosave`  
-Does not save the memory to the file
+`-n` or `--name`  
+Name of the Agent. Defaults to `NotKevin`
+
+`-r` or `--rubberduck` 
+This is the no save option. The agent is fed your conversation history and contest from past conversations but does not save new content.
 
