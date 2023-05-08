@@ -66,7 +66,8 @@ class Engine:
         
         prompt = USER_PROMPT.format(recent_messages = recentMessages, context_messages = contextMessages, query = query)
 
-        response = get_chat_completion(prompt, SYSTEM_PROMPT)
+        system_prompt = SYSTEM_PROMPT.replace('{name}',self.__memory.Name).replace('{personality}',self.__memory.Personality)
+        response = get_chat_completion(prompt, system_prompt)
 
         response = json.loads(response)
         if "[INSIGHT]" in response:
@@ -74,7 +75,7 @@ class Engine:
                 self._store(f"[INSIGHT] {response['[INSIGHT]']}")
 
         if "[RESPONSE]" in response:
-            _response = f"[KEVIN] {response['[RESPONSE]']}"
+            _response = f"[{self.__memory.Name}] {response['[RESPONSE]']}"
             if save:
                 self._store(_response)
             return _response
