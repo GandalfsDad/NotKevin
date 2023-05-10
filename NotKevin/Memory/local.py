@@ -81,6 +81,10 @@ class LocalMemory(Memory):
         idx = [x[0][:3]!='[IN' for x in self.Content]
         return self.Content[idx], self.Embeddings[idx]
     
+    def get_insights(self):
+        idx = [x[0][:3]=='[IN' for x in self.Content]
+        return self.Content[idx], self.Embeddings[idx]
+    
     def clear(self, save = False):
         self.__text = np.array([]).reshape(-1,1)
         self.__embeddings = np.array([]).reshape(-1,1536)
