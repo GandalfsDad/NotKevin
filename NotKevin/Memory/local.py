@@ -73,8 +73,8 @@ class LocalMemory(Memory):
             np.save(f"{HOME}/.memory/{self.__sub_directory}/content", content)
 
         #check if .memory/personality.txt exists
-        if not os.path.exists(f"{HOME}/.memory/{self.__sub_directory}/manerisms.txt"):
-            with open(f"{HOME}/.memory/{self.__sub_directory}/manerisms.txt", "w") as f:
+        if not os.path.exists(f"{HOME}/.memory/{self.__sub_directory}/personality.txt"):
+            with open(f"{HOME}/.memory/{self.__sub_directory}/personality.txt", "w") as f:
                 f.write("")
 
     def get_memories(self):
