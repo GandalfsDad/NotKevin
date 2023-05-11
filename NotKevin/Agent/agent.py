@@ -7,11 +7,13 @@ DEFULT_AUTOSAVE = True
 
 class Agent:
 
-    def __init__(self, name = "NotKevin", memory = DEFAULT_MEMORY, autosave = DEFULT_AUTOSAVE):
+    def __init__(self, name = "NotKevin", memory = DEFAULT_MEMORY, autosave = DEFULT_AUTOSAVE, gpt4 = False):
         self.__name = name
         self.__memory = self._initiate_memory(memory)
-        self.__engine = Engine(self.__memory)
+        self.__engine = Engine(self.__memory, gpt4 = gpt4)
         self.__autosave = autosave
+
+        self.__gpt4 = gpt4
         
 
         init(autoreset=True)
