@@ -41,7 +41,7 @@ class Agent:
                 self.__memory.save_personality(query)
 
     def run(self):
-        print(self.format_response(f"Hello I am {self.__name}, what can I do for you today?"))
+        print(Fore.YELLOW+f"{self.__name} has entered the chat.")
         while True:
             query = input(Fore.RED+"[YOU] " + Fore.WHITE)
 
