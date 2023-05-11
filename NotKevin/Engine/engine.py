@@ -86,10 +86,10 @@ class Engine:
         summarized_insights_prompt = GET_INSIGHTS_SYSTEM_PROMPT.replace('{name}',self.__memory.Name).replace('{personality}',self.__memory.Personality).replace('{insights}',relevant_insights)
 
         if self.__gpt4:
-            response = get_chat_completion(GET_INSIGHTS_PROMPT, summarized_insights_prompt, model = 'gpt4')
+            response = get_chat_completion(GET_INSIGHTS_PROMPT, summarized_insights_prompt, model = 'gpt-4')
         else:
             response = get_chat_completion(GET_INSIGHTS_PROMPT, summarized_insights_prompt)
-            
+
         self._deepInsights = response
     
     def _genResponse(self, query, recentMessages,contextMessages,save = True):
@@ -99,7 +99,7 @@ class Engine:
         system_prompt = SYSTEM_PROMPT.replace('{name}',self.__memory.Name).replace('{personality}',self.__memory.Personality).replace('{insights}',self._deepInsights)
         
         if self.__gpt4:
-            response = get_chat_completion(prompt, system_prompt, model = 'gpt4')
+            response = get_chat_completion(prompt, system_prompt, model = 'gpt-4')
         else:
             response = get_chat_completion(prompt, system_prompt)
 
