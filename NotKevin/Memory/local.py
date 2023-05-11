@@ -107,7 +107,6 @@ class LocalMemory(Memory):
     
     @property
     def HasPersonality(self):
-        print(f"Personality: {self.__personality}")
         return len(self.__personality) > 1
     
     @property
