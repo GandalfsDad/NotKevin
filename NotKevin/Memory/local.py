@@ -43,7 +43,7 @@ class LocalMemory(Memory):
     def _load(self):
         self.__embeddings = np.load(f"{HOME}/.memory/{self.__sub_directory}/vector.npy").reshape(-1,1536)
         self.__text = np.load(f"{HOME}/.memory/{self.__sub_directory}/content.npy").reshape(-1,1)
-        self.__manerisms = open(f"{HOME}/.memory/{self.__sub_directory}/manerisms.txt", "r").read()
+        self.__personality = open(f"{HOME}/.memory/{self.__sub_directory}/personality.txt", "r").read()
     
     def _save(self):
         np.save(f"{HOME}/.memory/{self.__sub_directory}/vector", self.__embeddings)
@@ -107,6 +107,7 @@ class LocalMemory(Memory):
     
     @property
     def HasPersonality(self):
+        print(f"Personality: {self.__personality}")
         return len(self.__personality) > 1
     
     @property
