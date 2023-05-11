@@ -12,9 +12,11 @@ DEFAULT_INSIGHT_FREQUENCY = 5
 
 class Engine:
 
-    def __init__(self, memory):
+    def __init__(self, memory, gpt4 = False):
         self.__memory = memory
         self._recentMessages = []
+
+        self.__gpt4 = gpt4
 
         self.__queryCount = 0
         self._deepInsights = ''
@@ -45,7 +47,7 @@ class Engine:
 
         if save:
             self._store(query)
-
+        
         response = self._genResponse(query, recent, context, save = save)
 
         self._recentMessages.append(query)
@@ -83,7 +85,11 @@ class Engine:
 
         summarized_insights_prompt = GET_INSIGHTS_SYSTEM_PROMPT.replace('{name}',self.__memory.Name).replace('{personality}',self.__memory.Personality).replace('{insights}',relevant_insights)
 
-        response = get_chat_completion(GET_INSIGHTS_PROMPT, summarized_insights_prompt)
+        if self.__gpt4:
+            response = get_chat_completion(GET_INSIGHTS_PROMPT, summarized_insights_prompt, model = 'gpt4')
+        else:
+            response = get_chat_completion(GET_INSIGHTS_PROMPT, summarized_insights_prompt)
+            
         self._deepInsights = response
     
     def _genResponse(self, query, recentMessages,contextMessages,save = True):
@@ -91,7 +97,11 @@ class Engine:
         prompt = USER_PROMPT.format(recent_messages = recentMessages, context_messages = contextMessages, query = query)
 
         system_prompt = SYSTEM_PROMPT.replace('{name}',self.__memory.Name).replace('{personality}',self.__memory.Personality).replace('{insights}',self._deepInsights)
-        response = get_chat_completion(prompt, system_prompt)
+        
+        if self.__gpt4:
+            response = get_chat_completion(prompt, system_prompt, model = 'gpt4')
+        else:
+            response = get_chat_completion(prompt, system_prompt)
 
         response = json.loads(response)
         if "[INSIGHT]" in response:
