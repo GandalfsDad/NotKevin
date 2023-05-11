@@ -43,7 +43,7 @@ class LocalMemory(Memory):
     def _load(self):
         self.__embeddings = np.load(f"{HOME}/.memory/{self.__sub_directory}/vector.npy").reshape(-1,1536)
         self.__text = np.load(f"{HOME}/.memory/{self.__sub_directory}/content.npy").reshape(-1,1)
-        self.__manerisms = open(f"{HOME}/.memory/{self.__sub_directory}/manerisms.txt", "r").read()
+        self.__personality = open(f"{HOME}/.memory/{self.__sub_directory}/personality.txt", "r").read()
     
     def _save(self):
         np.save(f"{HOME}/.memory/{self.__sub_directory}/vector", self.__embeddings)
@@ -73,12 +73,16 @@ class LocalMemory(Memory):
             np.save(f"{HOME}/.memory/{self.__sub_directory}/content", content)
 
         #check if .memory/personality.txt exists
-        if not os.path.exists(f"{HOME}/.memory/{self.__sub_directory}/manerisms.txt"):
-            with open(f"{HOME}/.memory/{self.__sub_directory}/manerisms.txt", "w") as f:
+        if not os.path.exists(f"{HOME}/.memory/{self.__sub_directory}/personality.txt"):
+            with open(f"{HOME}/.memory/{self.__sub_directory}/personality.txt", "w") as f:
                 f.write("")
 
     def get_memories(self):
         idx = [x[0][:3]!='[IN' for x in self.Content]
+        return self.Content[idx], self.Embeddings[idx]
+    
+    def get_insights(self):
+        idx = [x[0][:3]=='[IN' for x in self.Content]
         return self.Content[idx], self.Embeddings[idx]
     
     def clear(self, save = False):
