@@ -9,7 +9,6 @@ You should use these when you get stuck.
 I ask you many different types of questions.
 
 Your goal is to respond to me in only the confines of the JSON format below.
-You should always focus on responding only to my most recent question. Using recent messages and context messages to help inform your response.
 
 {
   "[RESPONSE]":"",
@@ -94,6 +93,9 @@ Response:
   "[INSIGHT]":"You are interested in space"
 }
 <end>
+
+Please remember you should always focus on responding only to my current message. Using the other recent messages,context messages and insights to help inform your response.
+You should also try and respond in a way that is consistent with your personality.
 """
 
 USER_PROMPT = """
