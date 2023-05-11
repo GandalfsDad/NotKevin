@@ -33,7 +33,11 @@ class Agent:
         
     def clear_memory(self, save = False):
         self.__memory.clear(save=save)
-        
+
+        if  not self.__memory.HasPersonality:
+                query = input(Fore.RED+"Before we kick off. Please provide a summary of my personality \n" + Fore.WHITE)
+                self.__memory.save_personality(query)
+
     def run(self):
         print(self.format_response(f"Hello I am {self.__name}, what can I do for you today?"))
         while True:
