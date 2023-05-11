@@ -1,6 +1,6 @@
 from .queries import get_chat_completion, get_embeddings
 from collections.abc import Iterable
-from .prompts import USER_PROMPT, SYSTEM_PROMPT, GET_INSIGHTS_PROMPT
+from .prompts import USER_PROMPT, SYSTEM_PROMPT, GET_INSIGHTS_PROMPT, GET_INSIGHTS_SYSTEM_PROMPT
 
 import json
 
@@ -18,6 +18,7 @@ class Engine:
 
         self.__queryCount = 0
         self._deepInsights = ''
+        self._genDeepInsights()
 
     def get_embeddings(self, query, save = True):
 
@@ -35,6 +36,7 @@ class Engine:
     def generate(self, query, save = True):
         query = f"[ME] {query}"
 
+        self.__queryCount +=1
         if self.__queryCount % DEFAULT_INSIGHT_FREQUENCY == 0:
             self._genDeepInsights()
     
@@ -74,14 +76,15 @@ class Engine:
         embed = get_embeddings(recent)
 
         insights, insight_embeddings = self.__memory.get_insights()
-        similarities = np.dot(embed, insight_embeddings)
+        similarities = np.dot(insight_embeddings,embed[0])
         
         top = np.argsort(similarities)[-memory_depth:]
         relevant_insights = '- '+'\n- '.join(insights[top,0])
 
-        summarized_insights_prompt = GET_INSIGHTS_PROMPT.replace('{name}',self.__memory.Name).replace('{personality}',self.__memory.Personality).replace('{insights}',relevant_insights)
+        summarized_insights_prompt = GET_INSIGHTS_SYSTEM_PROMPT.replace('{name}',self.__memory.Name).replace('{personality}',self.__memory.Personality).replace('{insights}',relevant_insights)
 
-        self._deepInsights = summarized_insights_prompt
+        response = get_chat_completion(GET_INSIGHTS_PROMPT, summarized_insights_prompt)
+        self._deepInsights = response
     
     def _genResponse(self, query, recentMessages,contextMessages,save = True):
         
