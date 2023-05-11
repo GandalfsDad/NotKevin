@@ -26,7 +26,7 @@ class Agent:
             lm = LocalMemory(sub_directory=self.__name)
 
             if  not lm.HasPersonality:
-                query = input(Fore.RED+"Before we kick off. Please provide a summary of my personality \n" + Fore.WHITE)
+                query = input(Fore.YELLOW+"Before we kick off. Please provide a summary of my personality \n" + Fore.WHITE)
                 lm.save_personality(query)
 
             return lm
@@ -37,7 +37,7 @@ class Agent:
         self.__memory.clear(save=save)
 
         if  not self.__memory.HasPersonality:
-                query = input(Fore.RED+"Before we kick off. Please provide a summary of my personality \n" + Fore.WHITE)
+                query = input(Fore.YELLOW+"Before we kick off. Please provide a summary of my personality \n" + Fore.WHITE)
                 self.__memory.save_personality(query)
 
     def run(self):
