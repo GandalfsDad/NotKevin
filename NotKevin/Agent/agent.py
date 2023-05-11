@@ -7,11 +7,13 @@ DEFULT_AUTOSAVE = True
 
 class Agent:
 
-    def __init__(self, name = "NotKevin", memory = DEFAULT_MEMORY, autosave = DEFULT_AUTOSAVE):
+    def __init__(self, name = "NotKevin", memory = DEFAULT_MEMORY, autosave = DEFULT_AUTOSAVE, gpt4 = False):
         self.__name = name
         self.__memory = self._initiate_memory(memory)
-        self.__engine = Engine(self.__memory)
+        self.__engine = Engine(self.__memory, gpt4 = gpt4)
         self.__autosave = autosave
+
+        self.__gpt4 = gpt4
         
 
         init(autoreset=True)
@@ -24,7 +26,7 @@ class Agent:
             lm = LocalMemory(sub_directory=self.__name)
 
             if  not lm.HasPersonality:
-                query = input(Fore.RED+"Before we kick off. Please provide a summary of my personality \n" + Fore.WHITE)
+                query = input(Fore.YELLOW+"Before we kick off. Please provide a summary of my personality \n" + Fore.WHITE)
                 lm.save_personality(query)
 
             return lm
@@ -35,11 +37,11 @@ class Agent:
         self.__memory.clear(save=save)
 
         if  not self.__memory.HasPersonality:
-                query = input(Fore.RED+"Before we kick off. Please provide a summary of my personality \n" + Fore.WHITE)
+                query = input(Fore.YELLOW+"Before we kick off. Please provide a summary of my personality \n" + Fore.WHITE)
                 self.__memory.save_personality(query)
 
     def run(self):
-        print(self.format_response(f"Hello I am {self.__name}, what can I do for you today?"))
+        print(Fore.YELLOW+f"{self.__name} has entered the chat.")
         while True:
             query = input(Fore.RED+"[YOU] " + Fore.WHITE)
 
