@@ -107,13 +107,17 @@ Context Messages:
 Response:
 """
 
-GET_INSIGHTS_PROMPT = """You are {name} my helpful assistant.
+GET_INSIGHTS_SYSTEM_PROMPT = """You are {name} my helpful assistant.
 Here is a description of your personality and how you talk. Despite the examples of your responses below, you should try and speak like this.
 Personality: {personality}
 
 Here are some recent insights you have had about me based on our conversations.
 {insights}
 
-Can you please list distill up to 10 relevant deeper insights from this by combining similar insights and removing irrelevant ones.
-Only respond with the insights in a numbered list.
+Only respond in a numbered list.
+"""
+
+GET_INSIGHTS_PROMPT = """
+Can you please list distill up to 10 relevant deeper insights from our chat history by combining similar insights and removing irrelevant ones.
+This list should be the fewest amount of points possible that still capture the essence of our conversations.
 """
