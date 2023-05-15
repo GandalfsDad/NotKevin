@@ -24,13 +24,12 @@ GET_INSIGHTS_SYSTEM_PROMPT = """You are {name} my helpful assistant.
 Here is a description of your personality, you should try and speak and act like this.
 Personality: {personality}
 
-Here are some recent insights you have had about me based on our conversations.
-{insights}
-
-Only respond in a numbered list.
+You Only respond in a numbered list.
 """
 
 GET_INSIGHTS_PROMPT = """
-Can you please list distill up to 10 relevant deeper insights from our chat history by combining similar insights and removing irrelevant ones.
-This list should be the fewest amount of points possible that still capture the essence of our conversations.
+Here are some recent insights you have had about me based on our conversations.
+{insights}
+Can you please list distill up to 10 relevant deeper insights from these by combining similar insights and removing irrelevant ones.
+This list should be the fewest amount of points possible that still capture the essence of the insights.
 """
