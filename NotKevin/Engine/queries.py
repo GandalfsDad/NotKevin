@@ -8,6 +8,7 @@ DEFAULT_CHAT_COMPLETION_MODEL = 'gpt-3.5-turbo'
 DEFAULT_TEMPERATURE = 0
 DEFAULT_MAX_TOKENS = 1024
 DEFAULT_EMBEDDING_CHUNK = 1000
+DEFAULT_RETRIES = 3
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
@@ -42,19 +43,20 @@ def get_completion(input, model = DEFAULT_COMPLETION_MODEL, max_tokens = DEFAULT
     
     return response['choices'][0]['text']
 
-def get_chat_completion(input, system,model = DEFAULT_CHAT_COMPLETION_MODEL, max_tokens = DEFAULT_MAX_TOKENS, temperature = DEFAULT_TEMPERATURE,stop = None):
+def get_chat_completion(input,model = DEFAULT_CHAT_COMPLETION_MODEL, max_tokens = DEFAULT_MAX_TOKENS, temperature = DEFAULT_TEMPERATURE,stop = None, attempt = 0):
     try:
 
         response = openai.ChatCompletion.create(
             model=model,
-            messages=[
-                {"role": "system", "content": system},
-                {"role": "user", "content": input},
-                ],
+            messages=input,
             max_tokens=max_tokens
         )
     except openai.error.RateLimitError as e:
         time.sleep(1)
-        return get_completion(input, system, model, max_tokens, temperature, stop)
+        return get_completion(input, model, max_tokens, temperature, stop)
+    except Exception as e:
+        if attempt < DEFAULT_RETRIES:
+            time.sleep(1)
+            return get_chat_completion(input, model, max_tokens, temperature, stop, attempt+1)
     
     return response['choices'][0]['message']['content']
