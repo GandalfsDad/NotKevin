@@ -15,7 +15,7 @@ python -m build
 ```bash
 cd dist
 conda create -n notkevin python=3.11
-pip install notkevin-0.0.0-py3-none-any.whl
+pip install notkevin-0.0.4-py3-none-any.whl
 ```
 
 ### Access
@@ -40,3 +40,5 @@ Name of the Agent. Defaults to `NotKevin`
 `-r` or `--rubberduck` 
 This is the no save option. The agent is fed your conversation history and contest from past conversations but does not save new content.
 
+`--gpt4` 
+This causes the model to use GPT-4 backend instead of GPT-3. Embeddings are still GPT-3.
