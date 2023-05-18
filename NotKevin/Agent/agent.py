@@ -36,6 +36,8 @@ class Agent:
     def clear_memory(self, save = False):
         self.__memory.clear(save=save)
 
+        self.__engine = Engine(self.__memory, gpt4 = self.__gpt4)
+
         if  not self.__memory.HasPersonality:
                 query = input(Fore.YELLOW+"Before we kick off. Please provide a summary of my personality \n" + Fore.WHITE)
                 self.__memory.save_personality(query)
